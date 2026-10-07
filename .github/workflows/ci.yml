@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      # Ubuntu 24.04 forbids the user namespaces Chrome's sandbox is made of, to anything without
+      # an AppArmor profile. Lifted here so the browser test runs on Linux too.
+      - if: runner.os == 'Linux'
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - run: bun run typecheck
+      - run: bun test
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: bun run test:node
+
+  installer:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Build the package
+        run: |
+          bun install --frozen-lockfile
+          npm pack
+      - name: Install, play a prototype, uninstall
+        run: |
+          $env:OPENCODE_CONFIG_DIR = Join-Path $env:RUNNER_TEMP "opencode-config"
+          $package = (Get-Item opencode-game-prototype-*.tgz).FullName
+          & ./install-game-prototype.ps1 -Package $package
+          $plugin = Join-Path $env:OPENCODE_CONFIG_DIR "plugins\opencode-game-prototype.js"
+          $three = Join-Path $env:OPENCODE_CONFIG_DIR "opencode-game-prototype\assets\three\three.module.js"
+          if (-not (Test-Path $plugin) -or -not (Test-Path $three)) { throw "files missing after install" }
+          node test/installed-check.mjs $plugin
+          if ($LASTEXITCODE -ne 0) { throw "the installed plugin does not work" }
+          & ./install-game-prototype.ps1 -Uninstall
+          if (Test-Path $plugin) { throw "uninstall left the plugin in place" }
