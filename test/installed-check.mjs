@@ -32,7 +32,10 @@ if (!created.includes('Created "installed"')) throw new Error(`proto_new failed:
 console.log((await call("proto_status", {})).split("\n").slice(0, 4).join("\n"))
 
 if (process.env.PROTO_SKIP_LIVE !== "1") {
-  const report = await call("proto_play", { keys: "D 1s" })
+  // Initialise cold software WebGL before timing a keyboard hold.
+  const warmup = await call("proto_play", {})
+  if (!warmup.includes("No errors.")) throw new Error(`the initial page check failed:\n${warmup}`)
+  const report = await call("proto_play", { keys: "D 2s" })
   console.log(report)
   if (!report.includes("No errors.") || !report.includes("Player moved") || !report.includes('"Score 0" → "Score 1"')) throw new Error("the test play did not show the player reaching the coin")
 }

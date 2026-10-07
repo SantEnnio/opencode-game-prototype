@@ -22,9 +22,13 @@ describe.skipIf(!browser || process.env.PROTO_SKIP_LIVE === "1")("in a real brow
 
   test("the template runs: D walks the player into the coin and the score goes up", async () => {
     await proto.tools.proto_new!.execute({ name: "coin-run" }, context)
-    const report = await proto.tools.proto_play!.execute({ keys: "D 1s" }, context)
-    expect(report).toContain('keys "D 1s". No errors.')
-    expect(report).toMatch(/- Player moved [45]\.\d: \(0\.0, 0\.5, 0\.0\) → \([45]\.\d, 0\.5, 0\.0\)/)
+    // Cold software WebGL can spend the first key's entire hold compiling shaders. Load once
+    // without input, then test reaching the coin; distance per wall-clock second varies with FPS.
+    expect(await proto.tools.proto_play!.execute({}, context)).toContain("No errors.")
+    const report = await proto.tools.proto_play!.execute({ keys: "D 2s" }, context)
+    expect(report).toContain('keys "D 2s". No errors.')
+    const moved = /- Player moved \d+\.\d: \(0\.0, 0\.5, 0\.0\) → \((\d+\.\d), 0\.5, 0\.0\)/.exec(report)
+    expect(Number(moved?.[1])).toBeGreaterThan(0)
     expect(report).toContain("- Coin was removed at")
     expect(report).toContain('- Text on screen: "Score 0" → "Score 1"')
     expect(proto.idle("s")).toBeNull()

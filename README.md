@@ -64,7 +64,7 @@ irm https://github.com/SantEnnio/opencode-game-prototype/releases/latest/downloa
 Run it again to update. For a classroom, download `install-game-prototype.ps1` and the
 `opencode-game-prototype-*.tgz` of a [release](https://github.com/SantEnnio/opencode-game-prototype/releases)
 once, put them on a shared drive, and on each machine run
-`powershell -ExecutionPolicy Bypass -File install-game-prototype.ps1 -Package opencode-game-prototype-0.2.2.tgz`.
+`powershell -ExecutionPolicy Bypass -File install-game-prototype.ps1 -Package opencode-game-prototype-0.2.3.tgz`.
 `-Uninstall` removes the plugin. The installer picks the newest release that carries this package,
 tagged `vX.Y.Z` in this repository.
 

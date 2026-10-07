@@ -1,11 +1,14 @@
 # opencode-game-prototype: status
 
-Last updated: 2026-10-07. Version 0.2.2, extracted from
+Last updated: 2026-10-07. Version 0.2.3, extracted from
 `SantEnnio/opencode-unity` commit `90835d4acadf11c40df37259e7283c83b8c60de0`.
 Repository: [SantEnnio/opencode-game-prototype](https://github.com/SantEnnio/opencode-game-prototype).
 The first standalone release is pending its GitHub checks. The v0.2.1 tag never produced a
 release: Chrome missed the report deadline on the Linux runner. Version 0.2.2 allows a cold
 browser 45 s of startup/report overhead; completed runs still return immediately.
+The v0.2.2 tag also produced no release: the key test assumed a fixed distance per second even
+on a cold or overloaded software-rendering runner. The integration checks now load WebGL once
+without input, then hold D for 2 s and require movement, coin removal and the score change.
 
 The code, assets and tests are at the repository root. Arguments, process helpers, written-path
 detection, config-directory resolution and the key-script parser now live in this repository.
@@ -14,7 +17,8 @@ are recorded below.
 
 ## Standalone verification (2026-10-07)
 
-- Build and npm pack passed for the extraction (0.2.1); the bundle carries all required assets.
+- Build and npm pack passed for 0.2.3; the bundle carries all required assets.
+- The installed-copy check passed locally through opencode 2 setup and a real browser.
 - bun test: 66 passed, including 4 live-browser checks and the delayed-report regression.
   The regression failed at the old 17.1 s total deadline and passed with the new budget.
 - bun run typecheck passed.
@@ -23,7 +27,8 @@ are recorded below.
 - The original Unity package also passed all 140 tests and typecheck.
 - The extracted CI passed on Windows and macOS, including both PowerShell installers.
   Linux exposed a cold-start timeout; a delayed-report regression test reproduces it.
-  The corrected release remains pending GitHub verification.
+  The corrected release remains pending GitHub verification. The cold-start and wall-clock
+  movement failures above were observed separately in CI; no browser checks are disabled.
 
 ## Historical verification before extraction
 
