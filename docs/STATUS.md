@@ -1,9 +1,11 @@
 # opencode-game-prototype: status
 
-Last updated: 2026-10-07. Version 0.2.1, extracted from
+Last updated: 2026-10-07. Version 0.2.2, extracted from
 `SantEnnio/opencode-unity` commit `90835d4acadf11c40df37259e7283c83b8c60de0`.
 Repository: [SantEnnio/opencode-game-prototype](https://github.com/SantEnnio/opencode-game-prototype).
-The first standalone release is pending its GitHub checks.
+The first standalone release is pending its GitHub checks. The v0.2.1 tag never produced a
+release: Chrome missed the report deadline on the Linux runner. Version 0.2.2 allows a cold
+browser 45 s of startup/report overhead; completed runs still return immediately.
 
 The code, assets and tests are at the repository root. Arguments, process helpers, written-path
 detection, config-directory resolution and the key-script parser now live in this repository.
@@ -12,14 +14,16 @@ are recorded below.
 
 ## Standalone verification (2026-10-07)
 
-- Build and npm pack passed; opencode-game-prototype-0.2.1.tgz carries the bundle and all assets.
-- bun test: 65 passed, including 4 live-browser checks.
+- Build and npm pack passed for the extraction (0.2.1); the bundle carries all required assets.
+- bun test: 66 passed, including 4 live-browser checks and the delayed-report regression.
+  The regression failed at the old 17.1 s total deadline and passed with the new budget.
 - bun run typecheck passed.
 - bun run test:node passed on Node 24.5.0 and Bun 1.3.10, under both opencode host APIs.
 - Every relative source and script import resolves inside this standalone folder.
 - The original Unity package also passed all 140 tests and typecheck.
-- CI and release YAML parse successfully. These workflows have not run on GitHub; Windows
-  and Linux verification of this extraction and the Windows installer remain pending.
+- The extracted CI passed on Windows and macOS, including both PowerShell installers.
+  Linux exposed a cold-start timeout; a delayed-report regression test reproduces it.
+  The corrected release remains pending GitHub verification.
 
 ## Historical verification before extraction
 

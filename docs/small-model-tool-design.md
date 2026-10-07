@@ -70,7 +70,7 @@ file; "limits on adding several components" was its own broken JSON).
 
 ## What the controlled benchmark added
 
-A later benchmark on the same model and GPU ([qwen3.6-test-report.md](qwen3.6-test-report.md))
+A later benchmark on the same model and GPU ([qwen3.6-test-report.md](https://github.com/SantEnnio/opencode-unity/blob/main/docs/qwen3.6-test-report.md))
 separated the two changes this table mixes. On the flat surface, better error messages alone took
 the rename-and-re-parent task from 21 rejections to 0. Shape and messages are both levers, and
 messages are the cheaper one. Two more knobs cost nothing: temperature 0.3 and thinking off took

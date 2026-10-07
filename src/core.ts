@@ -65,8 +65,9 @@ const NOTE_TURNS = 2
 const CHECKED = new Set([".js", ".mjs", ".html", ".css", ".json"])
 const CHECK_SECONDS = 1
 const WATCH_SECONDS = 2
-// A browser start, the wait for a first frame and the report's way back, on a slow machine.
-const OVERHEAD_MS = 15_000
+// Cold Chrome startup and software WebGL on a CI or classroom machine can exceed 15 s.
+// Healthy runs still return as soon as the probe reports.
+const OVERHEAD_MS = 45_000
 
 /** Null when the plugin's own files are missing: nothing can be created or served. */
 export function createPrototypes(directory: string, rawOptions: unknown, log: Log) {
@@ -189,7 +190,7 @@ export function createPrototypes(directory: string, rawOptions: unknown, log: Lo
         return `[proto] The page could NOT be tested: the browser tab with "${prototype.name}" did not answer. Ask the user to bring that tab to the front, then try again.`
       }
       const cause = browser
-        ? `${path.basename(browser)} started but did not report, so running it without a window is probably switched off on this machine`
+        ? `${path.basename(browser)} started but did not send a report before the time limit`
         : options.headless === false
           ? "no browser tab has this prototype open"
           : "no Edge or Chrome was found on this machine"
