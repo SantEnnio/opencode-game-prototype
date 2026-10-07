@@ -3,7 +3,8 @@
 Last updated: 2026-10-07. Version 0.2.3, extracted from
 `SantEnnio/opencode-unity` commit `90835d4acadf11c40df37259e7283c83b8c60de0`.
 Repository: [SantEnnio/opencode-game-prototype](https://github.com/SantEnnio/opencode-game-prototype).
-The first standalone release is pending its GitHub checks. The v0.2.1 tag never produced a
+The first standalone release is [v0.2.3](https://github.com/SantEnnio/opencode-game-prototype/releases/tag/v0.2.3),
+published with the package and Windows installer on 2026-10-07. The v0.2.1 tag never produced a
 release: Chrome missed the report deadline on the Linux runner. Version 0.2.2 allows a cold
 browser 45 s of startup/report overhead; completed runs still return immediately.
 The v0.2.2 tag also produced no release: the key test assumed a fixed distance per second even
@@ -27,8 +28,13 @@ are recorded below.
 - The original Unity package also passed all 140 tests and typecheck.
 - The extracted CI passed on Windows and macOS, including both PowerShell installers.
   Linux exposed a cold-start timeout; a delayed-report regression test reproduces it.
-  The corrected release remains pending GitHub verification. The cold-start and wall-clock
-  movement failures above were observed separately in CI; no browser checks are disabled.
+  The cold-start and wall-clock movement failures above were observed separately in CI;
+  no live-browser checks are disabled.
+- [CI](https://github.com/SantEnnio/opencode-game-prototype/actions/runs/37662480465) and
+  [Release](https://github.com/SantEnnio/opencode-game-prototype/actions/runs/37662481578) passed
+  on Windows, macOS and Linux, including both Windows PowerShell 5.1 and PowerShell 7 installers.
+- The tarball downloaded from the public v0.2.3 release passed the installed-copy check on Node
+  24.5.0 and Chrome: plugin setup, prototype creation, movement, coin collection and score change.
 
 ## Historical verification before extraction
 
